@@ -64,3 +64,53 @@ jobs:
       - name: Fail workflow if tests failed
         if: steps.playwright-tests.outcome == 'failure'
         run: exit 1
+
+  publish-report:
+    name: Publish HTML Report
+    if: always()
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-reports
+          pattern: playwright-report-*
+
+      - name: Merge reports
+        run: |
+          mkdir -p merged-report
+          echo "<html><head><title>Playwright Test Reports</title></head><body>" > merged-report/index.html
+          echo "<h1>Playwright Test Reports - Run #${{ github.run_number }}</h1>" >> merged-report/index.html
+          echo "<p>Commit: <code>${{ github.sha }}</code></p>" >> merged-report/index.html
+          echo "<p>Branch: <code>${{ github.ref_name }}</code></p>" >> merged-report/index.html
+          echo "<p>Triggered by: ${{ github.actor }}</p>" >> merged-report/index.html
+          echo "<hr>" >> merged-report/index.html
+          echo "<h2>Reports by Browser:</h2><ul>" >> merged-report/index.html
+
+          for dir in all-reports/playwright-report-*; do
+            if [ -d "$dir" ]; then
+              browser=$(basename "$dir" | sed 's/playwright-report-//' | sed 's/-[0-9]*$//')
+              mkdir -p "merged-report/$browser"
+              cp -r "$dir"/* "merged-report/$browser/" 2>/dev/null || true
+              echo "<li><a href='$browser/index.html'>$browser Report</a></li>" >> merged-report/index.html
+            fi
+          done
+
+          echo "</ul></body></html>" >> merged-report/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./merged-report
+          publish_branch: gh-pages
+          keep_files: false
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy Playwright report for run #${{ github.run_number }}'

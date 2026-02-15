@@ -123,6 +123,8 @@ Tests run automatically on:
 
 Results and artifacts retained for 7 days.
 
+Primitive reporting works via automatic upload of HTML report to GitHub Pages.
+
 ## Brief Notes
 
 ### Test Scenario Selection

@@ -134,6 +134,6 @@ As requested both of these tests are read-only.
 
 I decided to leave login test failing since battle with cloudflare might have taken too much time and would require additional tools usage of which is unrealistic for a real test automation framework. CloudFlare provides a way to allow automation software via their own opensource solution Cloudflare Worker or a simple whitelist of IP addresses. However I don't think it is in scope of this task.
 
-## AI usage disclamer
+## AI usage disclaimer
 AI was used for writing commentaries, formatting and structuring the README.md file, as well as for cleaning up the code and removing unnecessary comments and console.log statements used in the process of debugging. 
 However I was trying to make this codebase readable not only for me and other developers, but also AI agents that can be used to speed up the development process and deal with the backlog of tests since it was mentioned as one of your main concerns during the interview.

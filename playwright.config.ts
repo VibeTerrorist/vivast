@@ -19,11 +19,16 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
 
   // Reporter configuration
-  reporter: [
-    ['list'],
-    ['html', { outputFolder: 'playwright-report' }],
-    ['junit', { outputFile: 'test-results/junit.xml' }],
-  ],
+  reporter: process.env.CI
+    ? [
+        ['github'],  // GitHub Actions annotations with test steps
+        ['html', { outputFolder: 'playwright-report', open: 'never' }],
+        ['junit', { outputFile: 'test-results/junit.xml' }],
+      ]
+    : [
+        ['list'],  // Detailed list for local development
+        ['html', { outputFolder: 'playwright-report' }],
+      ],
 
   use: {
     baseURL: 'https://www.vivastreet.co.uk',

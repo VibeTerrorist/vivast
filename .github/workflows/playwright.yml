@@ -35,6 +35,8 @@ jobs:
         run: npx playwright install --with-deps ${{ matrix.browser }}
 
       - name: Run Playwright tests
+        id: playwright-tests
+        continue-on-error: true
         run: npx playwright test --project=${{ matrix.browser }}
         env:
           CI: true
@@ -42,18 +44,23 @@ jobs:
           TEST_EMAIL_VALID: ${{ secrets.TEST_EMAIL_VALID }}
           TEST_PASSWORD_VALID: ${{ secrets.TEST_PASSWORD_VALID }}
 
-      - name: Upload test results
+      - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.browser }}
+          name: playwright-report-${{ matrix.browser }}-${{ github.run_number }}
           path: playwright-report/
           retention-days: 7
 
-      - name: Upload test artifacts
+      - name: Upload test artifacts (traces, videos, screenshots)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ matrix.browser }}
+          name: test-results-${{ matrix.browser }}-${{ github.run_number }}
           path: test-results/
           retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Fail workflow if tests failed
+        if: steps.playwright-tests.outcome == 'failure'
+        run: exit 1

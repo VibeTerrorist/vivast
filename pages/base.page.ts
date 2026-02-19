@@ -1,6 +1,7 @@
 import { Page, expect } from '@playwright/test';
 import { step } from '../utils/step-decorator';
 import { IBasePage } from '../utils/types';
+import { handleCookieConsent as handleCookieConsentUtil } from '../utils/helpers';
 
 /**
  * Base page class containing common functionality for all page objects
@@ -34,22 +35,11 @@ export abstract class BasePage implements IBasePage {
 
   /**
    * Handle cookie consent banner
+   * Delegates to shared utility function for consistent behavior
    */
   @step('Handle cookie consent banner')
   async handleCookieConsent(): Promise<void> {
-    try {
-      const acceptButton = this.page.getByRole('button', { name: 'Accept All' });
-      await acceptButton.click({ timeout: 3000 });
-      await expect(acceptButton).toBeHidden({ timeout: 3000 });
-    } catch (firstError) {
-      try {
-        const acceptButtonFallback = this.page.locator('#onetrust-accept-btn-handler');
-        await acceptButtonFallback.click({ timeout: 3000 });
-        await expect(this.page.locator('#onetrust-banner-sdk')).toBeHidden({ timeout: 3000 });
-      } catch (secondError) {
-        // No cookie banner present or already accepted
-      }
-    }
+    await handleCookieConsentUtil(this.page);
   }
 
   /**

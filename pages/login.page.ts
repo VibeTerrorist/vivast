@@ -16,11 +16,11 @@ export class LoginPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.emailInput = page.locator('[data-automation="urD_LoginEmailInput"]');
-    this.passwordInput = page.locator('[data-automation="urD_Password"]');
-    this.loginButton = page.locator('[data-automation="urD_Login"]');
-    this.captchaCheckbox = page.locator('label.cb-lb input[type="checkbox"]');
-    this.errorMessage = page.locator('[role="alert"].bg-error');
+    this.emailInput = page.getByTestId('urD_LoginEmailInput');
+    this.passwordInput = page.getByTestId('urD_Password');
+    this.loginButton = page.getByTestId('urD_Login');
+    this.captchaCheckbox = page.locator('label.cb-lb input[type="checkbox"]'); // Update with TestID
+    this.errorMessage = page.locator('[role="alert"].bg-error'); // Update with TestID
   }
 
   @step('Navigate to login page')

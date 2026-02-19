@@ -10,10 +10,10 @@ export class HomePage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.categoryDropdown = page.locator('[data-automation="categoryDropdown"]');
-    this.geolocationDropdown = page.locator('[data-automation="searchGeoDropdown"]');
-    this.searchButton = page.locator('[data-automation="homepageSearchButton"]');
-    this.myAccountLink = page.locator('[data-automation="lnkHeaderLogin"]');
+    this.categoryDropdown = page.getByTestId('categoryDropdown');
+    this.geolocationDropdown = page.getByTestId('searchGeoDropdown');
+    this.searchButton = page.getByTestId('homepageSearchButton');
+    this.myAccountLink = page.getByTestId('lnkHeaderLogin');
   }
 
   @step('Navigate to homepage')

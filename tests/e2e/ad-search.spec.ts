@@ -17,7 +17,7 @@ test.describe('Ad Search Tests', () => {
     await homePage.handleCookieConsent();
   });
 
-  test('Searches for a product, opens it and reveals phone number', async ({ page }) => {
+  test('Searches for a service, opens it and reveals phone number', async ({ page }) => {
     await homePage.selectCategory('Escorts and Massages');
     await homePage.selectLocation('London');
     await homePage.clickSearch();
@@ -38,5 +38,22 @@ test.describe('Ad Search Tests', () => {
     await searchResultsPage.enterKeywords('unrealisticKeywords');
     await searchResultsPage.clickSearchButton();
     await searchResultsPage.verifyNoResults();
+  })
+
+  test('Search for a service, verify correctness of the API request', async ({ page }) => {
+    await homePage.selectCategory('Escorts and Massages');
+    await homePage.selectLocation('London');
+    await homePage.clickSearch();
+    await homePage.handleAdultDisclaimer('Agree');
+    await searchResultsPage.verifySearchFilters('Escorts and Massages', 'London');
+    await searchResultsPage.validateUISearchAPI('Escorts and Massages', 'London');
+    await searchResultsPage.selectCategory('Escorts and Massages');
+    await searchResultsPage.clickSearchButton();
+    await searchResultsPage.confirmAPIRequest('Escorts and Massages', 'London');
+    await searchResultsPage.verifyHasResults();
+    await searchResultsPage.clickSearchResult(1);
+    await searchResultsPage.verifyOpenedAd();
+    await adDetailsPage.clickPhoneNumber();
+    await adDetailsPage.verifyPhoneNumberRevealed();
   })
 });

@@ -13,7 +13,7 @@ export class AdDetailsPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.phoneButton = page.locator('[data-automation="spnDetailsContactPhoneButtonDesktopLabel_right"]');
+    this.phoneButton = page.getByTestId('spnDetailsContactPhoneButtonDesktopLabel_right');
   }
 
   @step('Navigate to ad details page')

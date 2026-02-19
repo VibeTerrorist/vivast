@@ -32,6 +32,7 @@ export default defineConfig({
 
   use: {
     baseURL: 'https://www.vivastreet.co.uk',
+    testIdAttribute: 'data-automation',
 
     // Trace and debugging
     trace: 'retain-on-failure',
